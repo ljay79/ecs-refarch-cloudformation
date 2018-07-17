@@ -8,6 +8,9 @@
 -- for stack requirements
 - restructure/adjust CF template organization and references, take them out of app/services code bases
 - parameterize VPCs and subnet cidr range (10.10.xx.xx, 10.20.xx.xx, ..) make optional and keep default from sample
+- update ECS agent
+- add TAGs to EIP
+- add SSL support (ALB termination)
 
 - branch out a version with minimal Ressources and availabilities (singe AZ, single ECS cluster, ...)
 
