@@ -5,6 +5,7 @@
 This reference architecture provides a set of YAML templates for deploying microservices to [Amazon EC2 Container Service (Amazon ECS)](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html) with [AWS CloudFormation](https://aws.amazon.com/cloudformation/).
 
 You can launch this CloudFormation stack in your account:
+
 see: https://github.com/aws-samples/ecs-refarch-cloudformation
 
 ## Overview
@@ -65,6 +66,7 @@ The ECS instances should also appear in the Managed Instances section of the EC2
 ### Get started and deploy this into my AWS account
 
 You can launch this CloudFormation stack in your account:
+
 see: https://github.com/aws-samples/ecs-refarch-cloudformation
 
 ### Customize the templates
