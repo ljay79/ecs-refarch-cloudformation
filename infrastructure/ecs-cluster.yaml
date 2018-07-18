@@ -4,9 +4,28 @@ Description: >
 
 Parameters:
 
-    EnvironmentName:
-        Description: An environment name that will be prefixed to resource names
+    RessourcePrefix:
+        Description: An ressources name prefix that will be prefixed to resource names
         Type: String
+
+    EnvironmentType:
+        Description: 'Definition of the Environment type: Test, Staging or Production.'
+        Default: Test
+        Type: String
+        AllowedValues:
+          - Production
+          - Staging
+          - Test
+        ConstraintDescription: 'You must specify Test, Staging, or Production.'
+
+    ProjectName:
+      Description: Short name of project this stack is used in/for.
+      Default: Project Name
+      Type: String
+      MinLength: 2
+      MaxLength: 15
+      AllowedPattern: '[A-Za-z0-9][-. A-Za-z0-9]*'
+      ConstraintDescription: 'Must be between 2 and 15 characters long and may contain alphanumeric characters, hyphens (-), and dots (.), but must start with alphanumeric.'
 
     InstanceType:
         Description: Which instance type should we use to build the ECS cluster?
@@ -80,7 +99,7 @@ Resources:
     ECSCluster:
         Type: AWS::ECS::Cluster
         Properties:
-            ClusterName: !Ref EnvironmentName
+            ClusterName: !Sub ${RessourcePrefix}
 
     ECSAutoScalingGroup:
         Type: AWS::AutoScaling::AutoScalingGroup
@@ -92,7 +111,13 @@ Resources:
             DesiredCapacity: !Ref ClusterSize
             Tags:
                 - Key: Name
-                  Value: !Sub ${EnvironmentName} ECS host
+                  Value: !Sub ${RessourcePrefix} ECS host
+                  PropagateAtLaunch: true
+                - Key: Environment
+                  Value: !Ref EnvironmentType
+                  PropagateAtLaunch: true
+                - Key: Project
+                  Value: !Ref ProjectName
                   PropagateAtLaunch: true
         CreationPolicy:
             ResourceSignal:
@@ -228,7 +253,7 @@ Resources:
         Type: AWS::IAM::Role
         Properties:
             Path: /
-            RoleName: !Sub ${EnvironmentName}-ECSRole-${AWS::Region}
+            RoleName: !Sub ${RessourcePrefix}-ECSRole-${AWS::Region}
             AssumeRolePolicyDocument: |
                 {
                     "Statement": [{

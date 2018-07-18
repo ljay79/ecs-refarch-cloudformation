@@ -1,7 +1,27 @@
 Description: >
-    This template deploys a Lambda Function and Auto Scaling Lifecycle Hook to drain Tasks from your 
-    Container Instances when an Instance is selected for Termination in your Auto Scaling Group.
+  This template deploys a Lambda Function and Auto Scaling Lifecycle Hook to
+  drain Tasks from your  Container Instances when an Instance is selected for
+  Termination in your Auto Scaling Group.
 Parameters:
+  EnvironmentType:
+    Description: 'Definition of the Environment type: Test, Staging or Production.'
+    Default: Test
+    Type: String
+    AllowedValues:
+      - Production
+      - Staging
+      - Test
+    ConstraintDescription: 'You must specify Test, Staging, or Production.'
+  ProjectName:
+    Description: Short name of project this stack is used in/for.
+    Default: Project Name
+    Type: String
+    MinLength: 2
+    MaxLength: 15
+    AllowedPattern: '[A-Za-z0-9][-. A-Za-z0-9]*'
+    ConstraintDescription: >-
+      Must be between 2 and 15 characters long and may contain alphanumeric
+      characters, hyphens (-), and dots (.), but must start with alphanumeric.
   Cluster:
     Type: String
     Description: Name of ECS Cluster
@@ -93,6 +113,11 @@ Resources:
   LifecycleHandlerFunction:
     Type: 'AWS::Lambda::Function'
     Properties:
+      Tags:
+        - Key: Environment
+          Value: !Ref EnvironmentType
+        - Key: Project
+          Value: !Ref ProjectName
       Environment:
         Variables:
           CLUSTER: !Ref Cluster
@@ -106,9 +131,11 @@ Resources:
               autoscalingClient = boto3.client('autoscaling')
               snsClient = boto3.client('sns')
               lambdaClient = boto3.client('lambda')
+
               def publishSNSMessage(snsMessage,snsTopicArn):
                   response = snsClient.publish(TopicArn=snsTopicArn,Message=json.dumps(snsMessage),Subject='reinvoking')
-              def setContainerInstanceStatusToDraining(ecsClusterName,containerInstanceArn):
+              def
+              setContainerInstanceStatusToDraining(ecsClusterName,containerInstanceArn):
                   response = ecsClient.update_container_instances_state(cluster=ecsClusterName,containerInstances=[containerInstanceArn],status='DRAINING')
               def tasksRunning(ecsClusterName,ec2InstanceId):
                   ecsContainerInstances = ecsClient.describe_container_instances(cluster=ecsClusterName,containerInstances=ecsClient.list_container_instances(cluster=ecsClusterName)['containerInstanceArns'])['containerInstances']

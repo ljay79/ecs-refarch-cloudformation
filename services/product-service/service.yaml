@@ -3,6 +3,29 @@ Description: >
 
 Parameters: 
 
+    RessourcePrefix:
+        Description: An ressources name prefix that will be prefixed to resource names
+        Type: String
+
+    EnvironmentType:
+        Description: 'Definition of the Environment type: Test, Staging or Production.'
+        Default: Test
+        Type: String
+        AllowedValues:
+          - Production
+          - Staging
+          - Test
+        ConstraintDescription: 'You must specify Test, Staging, or Production.'
+
+    ProjectName:
+      Description: Short name of project this stack is used in/for.
+      Default: Project Name
+      Type: String
+      MinLength: 2
+      MaxLength: 15
+      AllowedPattern: '[A-Za-z0-9][-. A-Za-z0-9]*'
+      ConstraintDescription: 'Must be between 2 and 15 characters long and may contain alphanumeric characters, hyphens (-), and dots (.), but must start with alphanumeric.'
+
     VPC:
         Description: The VPC that the ECS cluster is deployed to
         Type: AWS::EC2::VPC::Id
@@ -54,13 +77,13 @@ Resources:
                   LogConfiguration:
                     LogDriver: awslogs
                     Options:
-                        awslogs-group: !Ref AWS::StackName
+                        awslogs-group: !Sub ${RessourcePrefix}-product-service
                         awslogs-region: !Ref AWS::Region
     
     CloudWatchLogsGroup:
         Type: AWS::Logs::LogGroup
         Properties: 
-            LogGroupName: !Ref AWS::StackName
+            LogGroupName: !Sub ${RessourcePrefix}-product-service
             RetentionInDays: 365  
 
     TargetGroup:
@@ -76,6 +99,11 @@ Resources:
             HealthCheckProtocol: HTTP
             HealthCheckTimeoutSeconds: 5
             HealthyThresholdCount: 2
+            Tags:
+              - Key: Environment
+                Value: !Ref EnvironmentType
+              - Key: Project
+                Value: !Ref ProjectName
     
     ListenerRule:
         Type: AWS::ElasticLoadBalancingV2::ListenerRule
@@ -96,7 +124,7 @@ Resources:
     ServiceRole: 
         Type: AWS::IAM::Role
         Properties: 
-            RoleName: !Sub ecs-service-${AWS::StackName}
+            RoleName: !Sub ${RessourcePrefix}-ECS-product-service
             Path: /
             AssumeRolePolicyDocument: |
                 {
@@ -107,7 +135,7 @@ Resources:
                     }]
                 }
             Policies: 
-                - PolicyName: !Sub ecs-service-${AWS::StackName}
+                - PolicyName: !Sub ecs-service-${RessourcePrefix}
                   PolicyDocument: 
                     {
                         "Version": "2012-10-17",

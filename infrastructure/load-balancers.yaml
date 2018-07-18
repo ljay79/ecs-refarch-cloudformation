@@ -4,9 +4,28 @@ Description: >
 
 Parameters:
 
-    EnvironmentName:
-        Description: An environment name that will be prefixed to resource names
+    RessourcePrefix:
+        Description: An ressources name prefix that will be prefixed to resource names
         Type: String
+
+    EnvironmentType:
+        Description: "Definition of the Environment type: Test, Staging or Production."
+        Default: Test
+        Type: String
+        AllowedValues:
+          - Production
+          - Staging
+          - Test
+        ConstraintDescription: "You must specify Test, Staging, or Production."
+
+    ProjectName:
+        Description: Short name of project this stack is used in/for.
+        Default: Project Name
+        Type: String
+        MinLength: 2
+        MaxLength: 15
+        AllowedPattern: "[A-Za-z0-9][-. A-Za-z0-9]*"
+        ConstraintDescription: Must be between 2 and 15 characters long and may contain alphanumeric characters, hyphens (-), and dots (.), but must start with alphanumeric.
 
     VPC:
         Type: AWS::EC2::VPC::Id
@@ -25,13 +44,17 @@ Resources:
     LoadBalancer:
         Type: AWS::ElasticLoadBalancingV2::LoadBalancer
         Properties:
-            Name: !Ref EnvironmentName
+            Name: !Ref RessourcePrefix
             Subnets: !Ref Subnets
             SecurityGroups: 
                 - !Ref SecurityGroup
-            Tags: 
+            Tags:
                 - Key: Name
-                  Value: !Ref EnvironmentName
+                  Value: !Sub ${RessourcePrefix} ECS ALBv2
+                - Key: Environment
+                  Value: !Ref EnvironmentType
+                - Key: Project
+                  Value: !Ref ProjectName
 
     LoadBalancerListener:
         Type: AWS::ElasticLoadBalancingV2::Listener
@@ -49,10 +72,15 @@ Resources:
     DefaultTargetGroup:
         Type: AWS::ElasticLoadBalancingV2::TargetGroup
         Properties:
-            Name: !Sub ${EnvironmentName}-default
+            Name: !Sub ${RessourcePrefix}-default
             VpcId: !Ref VPC
             Port: 80
             Protocol: HTTP
+            Tags: 
+                - Key: Environment
+                  Value: !Ref EnvironmentType
+                - Key: Project
+                  Value: !Ref ProjectName
            
 Outputs:
 

@@ -1,4 +1,4 @@
-- Add ENVIRONMENT Param for use as ressource name prefix instead of using StackName (test,staging,production)
+- ✓ Add ENVIRONMENT Param for use as ressource name prefix instead of using StackName (test,staging,production)
 - add EC2 with MySQL instance template with retention policy:retain
 - attach optional Bastion instance from foreign VPC?!
 - application/apache logging to CloudWatch (check already implemented Sample logging)
@@ -9,9 +9,16 @@
 - restructure/adjust CF template organization and references, take them out of app/services code bases
 - parameterize VPCs and subnet cidr range (10.10.xx.xx, 10.20.xx.xx, ..) make optional and keep default from sample
 - update ECS agent
-- add TAGs to EIP
 - add SSL support (ALB termination)
 
 - branch out a version with minimal Ressources and availabilities (singe AZ, single ECS cluster, ...)
 
 - find autom way (bitbucket pipeline) to update private S3 bucket with CloudFormation templates, as CF can use/reference only S3 locations
+
+--------
+
+Start Stack:
+	https://console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/new?stackName=Sample01&templateURL=https://s3.amazonaws.com/ecs-refarch-cloudformation-ff24/stack-sample.yaml
+
+https://s3.amazonaws.com/ecs-refarch-cloudformation-ff24/stack-sample.yaml
+Sample02
