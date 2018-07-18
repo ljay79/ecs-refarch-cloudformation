@@ -50,7 +50,7 @@ Resources:
           Value: !Ref EnvironmentType
         - Key: Project
           Value: !Ref ProjectName
-      TemplateURL: 'https://s3.amazonaws.com/ecs-refarch-cloudformation-ff24/master.yaml'
+      TemplateURL: 'https://s3.amazonaws.com/ecs-refarch-cloudformation/master.yaml'
       Parameters:
         EnvironmentType: !Ref EnvironmentType
         ProjectName: !Ref ProjectName
