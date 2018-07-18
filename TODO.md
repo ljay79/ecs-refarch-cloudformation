@@ -14,11 +14,3 @@
 - branch out a version with minimal Ressources and availabilities (singe AZ, single ECS cluster, ...)
 
 - find autom way (bitbucket pipeline) to update private S3 bucket with CloudFormation templates, as CF can use/reference only S3 locations
-
---------
-
-Start Stack:
-	https://console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/new?stackName=Sample01&templateURL=https://s3.amazonaws.com/ecs-refarch-cloudformation-ff24/stack-sample.yaml
-
-https://s3.amazonaws.com/ecs-refarch-cloudformation-ff24/stack-sample.yaml
-Sample02
